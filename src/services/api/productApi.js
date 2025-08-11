@@ -1,3 +1,6 @@
+import { mockProducts } from '@/lib/data/mockData'
+import { PRODUCT_CATEGORIES } from '@/lib/constants/categories'
+
 export const productApi = {
   getProducts: async (params = {}) => {
     // Simulate API delay
@@ -14,7 +17,7 @@ export const productApi = {
 
   getProduct: async (id) => {
     await new Promise(resolve => setTimeout(resolve, 300))
-    return mockProducts.find(product => product.id === parseInt(id))
+    return mockProducts.find(product => product.id === parseInt(id, 10))
   },
 
   getCategories: async () => {

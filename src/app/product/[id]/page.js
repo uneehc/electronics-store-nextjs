@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { mockProducts } from '@/lib/data/mockData'
+import { productApi } from '@/services/api/productApi'
 import { useCart } from '@/hooks/useCart'
 import { Star, Heart, ShoppingCart } from 'lucide-react'
 import Header from '@/components/common/Header'
 import Image from 'next/image'
+
+const PLACEHOLDER_IMAGE = 'https://placehold.co/600x600/e2e8f0/cccccc?text=No+Image'
 
 export default function ProductDetailPage() {
   const { id } = useParams()
@@ -20,10 +22,10 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     if (id) {
-      const fetchProduct = () => {
+      const fetchProduct = async () => {
         setLoading(true)
         try {
-          const productData = mockProducts.find(p => p.id === parseInt(id, 10))
+          const productData = await productApi.getProduct(id)
           setProduct(productData || null)
         } catch (error) {
           console.error('Error fetching product:', error)
@@ -71,9 +73,9 @@ export default function ProductDetailPage() {
           {/* Product Images */}
           <div>
             <div className="mb-4">
-              <div className="relative aspect-square overflow-hidden rounded-lg">
+              <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-200">
                 <Image
-                  src={product.images?.[selectedImage] || product.image}
+                  src={product.images?.[selectedImage] || product.image || PLACEHOLDER_IMAGE}
                   alt={product.name}
                   fill
                   className="object-cover"
@@ -87,12 +89,12 @@ export default function ProductDetailPage() {
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`relative w-16 h-16 rounded border-2 overflow-hidden ${
+                    className={`relative w-16 h-16 rounded border-2 overflow-hidden bg-gray-200 ${
                       selectedImage === index ? 'border-blue-500' : 'border-gray-300'
                     }`}
                   >
                     <Image
-                      src={image}
+                      src={image || PLACEHOLDER_IMAGE}
                       alt={`${product.name} ${index + 1}`}
                       fill
                       className="object-cover"
@@ -162,9 +164,6 @@ export default function ProductDetailPage() {
                 <span>{product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
               </button>
 
-              <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
-                <Heart className="w-5 h-5" />
-              </button>
             </div>
 
             <div className="border-t pt-6">

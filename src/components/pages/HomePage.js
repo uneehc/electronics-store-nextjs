@@ -6,18 +6,36 @@ import ProductGrid from '@/components/products/ProductGrid'
 import Filter from '@/components/filters/Filter'
 import { useFilters } from '@/hooks/useFilters'
 import { filterProducts, sortProducts } from '@/lib/utils/productUtils'
-import { PRODUCT_CATEGORIES } from '@/lib/constants/categories'
-import { mockProducts } from '@/lib/data/mockData'
+import { productApi } from '@/services/api/productApi'
 
 const HomePage = ({ onAddToCart }) => {
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [products, setProducts] = useState(mockProducts)
-  const [categories, setCategories] = useState(PRODUCT_CATEGORIES)
-  const [loading, setLoading] = useState(false)
+  const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
+  const [loading, setLoading] = useState(true)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   const { filters, updateFilter } = useFilters()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [productResponse, categoriesResponse] = await Promise.all([
+          productApi.getProducts(),
+          productApi.getCategories(),
+        ])
+        setProducts(productResponse.products)
+        setCategories(categoriesResponse)
+      } catch (error) {
+        console.error('Failed to fetch initial data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
 
   const handleToggleWishlist = async (productId) => {
     console.log('Toggle wishlist for product:', productId)

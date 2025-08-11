@@ -5,7 +5,7 @@ import { Plus, Minus, X, ShoppingBag, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const Cart = ({ items, onUpdateQuantity, onRemoveItem, isVisible, onClose }) => {
+const Cart = ({ items, onUpdateQuantity, onRemoveItem, onClearCart, isVisible, onClose }) => {
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
 
@@ -32,12 +32,23 @@ const Cart = ({ items, onUpdateQuantity, onRemoveItem, isVisible, onClose }) => 
               </span>
             )}
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5 text-gray-600" />
-          </button>
+          <div className="flex items-center space-x-1">
+            {items.length > 0 && (
+              <button
+                onClick={onClearCart}
+                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                title="Clear cart"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
         </div>
 
         {/* Cart Content */}

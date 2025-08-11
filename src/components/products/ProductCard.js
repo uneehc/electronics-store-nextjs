@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Star, Heart, ShoppingCart, Eye } from 'lucide-react'
+import { Star, ShoppingCart, Eye } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const ProductCard = ({ product, onAddToCart, onToggleWishlist }) => {
+const ProductCard = ({ product, onAddToCart }) => {
   const [imageError, setImageError] = useState(false)
 
   return (
@@ -54,20 +54,10 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist }) => {
         </div>
       </Link>
 
-      {/* Wishlist Button */}
-      <button
-        onClick={() => onToggleWishlist(product.id)}
-        className="absolute top-2 right-2 p-2 bg-white bg-opacity-90 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-all duration-200 z-10"
-      >
-        <Heart className={`w-4 h-4 transition-colors ${
-          product.isWishlisted ? 'text-red-500 fill-current' : 'text-gray-400 hover:text-red-500'
-        }`} />
-      </button>
-      
       {/* Product Info */}
       <div className="p-3 sm:p-4">
         <Link href={`/product/${product.id}`}>
-          <h3 className="font-semibold text-sm sm:text-base lg:text-lg mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors cursor-pointer">
+          <h3 className="font-semibold text-sm sm:text-base lg:text-lg mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors cursor-pointer h-10 sm:h-12 lg:h-14">
             {product.name}
           </h3>
         </Link>

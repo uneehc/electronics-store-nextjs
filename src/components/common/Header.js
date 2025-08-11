@@ -9,7 +9,7 @@ const Header = ({ cartCount, user, onCartClick }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 
   return (
-    <header className="bg-blue-600 text-white shadow-lg relative">
+    <header className="bg-blue-600 text-white shadow-lg sticky top-0 z-50">
       {/* Main Header */}
       <div className="px-4 py-3 lg:px-6 lg:py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
