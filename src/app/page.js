@@ -14,7 +14,8 @@ export default function Home() {
     cartCount,
     addToCart,
     updateQuantity,
-    removeItem
+    removeItem,
+    clearCart
   } = useCart()
 
   const mockUser = { name: 'John Doe' }
@@ -34,6 +35,7 @@ export default function Home() {
         onUpdateQuantity={updateQuantity}
         onRemoveItem={removeItem}
         isVisible={showCart}
+        onClearCart={clearCart}
         onClose={() => setShowCart(false)}
       />
     </div>

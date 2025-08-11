@@ -9,6 +9,14 @@ const Cart = ({ items, onUpdateQuantity, onRemoveItem, onClearCart, isVisible, o
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
 
+  console.log('clearcart', onClearCart)
+
+  const handleClearCartWithConfirmation = () => {
+    if (window.confirm('Are you sure you want to remove all items from your cart?')) {
+      onClearCart();
+    }
+  };
+
   if (!isVisible) return null
 
   return (
@@ -35,7 +43,7 @@ const Cart = ({ items, onUpdateQuantity, onRemoveItem, onClearCart, isVisible, o
           <div className="flex items-center space-x-1">
             {items.length > 0 && (
               <button
-                onClick={onClearCart}
+                onClick={handleClearCartWithConfirmation}
                 className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                 title="Clear cart"
               >

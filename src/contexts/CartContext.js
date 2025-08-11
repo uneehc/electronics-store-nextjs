@@ -67,7 +67,7 @@ const cartReducer = (state, action) => {
 
 const initialState = {
   items: [],
-  loading: false,
+  loading: true, // Start with loading true to prevent saving before hydration
   error: null,
 }
 
@@ -78,7 +78,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     const loadCart = () => {
       try {
-        const savedCart = localStorage.getItem('electrostore_cart')
+        const savedCart = sessionStorage.getItem('electrostore_cart')
         if (savedCart) {
           const parsedCart = JSON.parse(savedCart)
           dispatch({ type: 'LOAD_CART', payload: parsedCart })
@@ -86,7 +86,7 @@ export const CartProvider = ({ children }) => {
           dispatch({ type: 'LOAD_CART', payload: [] })
         }
       } catch (error) {
-        console.error('Error loading cart from localStorage:', error)
+        console.error('Error loading cart from sessionStorage:', error)
         dispatch({ type: 'SET_ERROR', payload: 'Failed to load cart' })
       }
     }
@@ -94,17 +94,19 @@ export const CartProvider = ({ children }) => {
     loadCart()
   }, [])
 
-  // Save cart to localStorage whenever items change
+  // Save cart to sessionStorage whenever items change, but not on initial load
   useEffect(() => {
-    if (state.items.length >= 0) {
+    // We don't want to save the initial empty cart to storage before we've loaded.
+    // The loading state helps us prevent this.
+    if (!state.loading) {
       try {
-        localStorage.setItem('electrostore_cart', JSON.stringify(state.items))
+        sessionStorage.setItem('electrostore_cart', JSON.stringify(state.items))
       } catch (error) {
-        console.error('Error saving cart to localStorage:', error)
+        console.error('Error saving cart to sessionStorage:', error)
         dispatch({ type: 'SET_ERROR', payload: 'Failed to save cart' })
       }
     }
-  }, [state.items])
+  }, [state.items, state.loading])
 
   // Cart actions
   const addToCart = (product, quantity = 1) => {
@@ -151,7 +153,7 @@ export const CartProvider = ({ children }) => {
   const clearCart = () => {
     try {
       dispatch({ type: 'CLEAR_CART' })
-      localStorage.removeItem('electrostore_cart')
+      sessionStorage.removeItem('electrostore_cart')
     } catch (error) {
       console.error('Error clearing cart:', error)
       dispatch({ type: 'SET_ERROR', payload: 'Failed to clear cart' })

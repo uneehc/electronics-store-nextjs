@@ -8,7 +8,7 @@ A modern, fully responsive electronics e-commerce application built with Next.js
 - **Responsive Design**: Mobile-first approach with 1 column on mobile, 2 on tablet, 4 on desktop
 - **Next.js 14**: Latest Next.js with App Router
 - **Modern UI**: Clean, professional design with Tailwind CSS
-- **Shopping Cart**: Persistent cart with local storage
+- **Shopping Cart**: Persistent cart with session storage
 - **Product Catalog**: Filterable and sortable product grid
 - **Image Optimization**: Next.js Image component for optimal performance
 - **Context API**: Global state management for cart and auth
@@ -27,7 +27,7 @@ A modern, fully responsive electronics e-commerce application built with Next.js
 - **Icons**: Lucide React
 - **Images**: Next.js Image optimization
 - **State Management**: React Context API
-- **Storage**: localStorage for cart persistence
+- **Storage**: sessionStorage for cart persistence
 
 ## 📁 Project Structure
 
