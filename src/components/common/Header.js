@@ -1,12 +1,60 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ShoppingCart, Search, User, Menu, X } from 'lucide-react'
+import { useProducts } from '@/contexts/ProductContext'
 import Link from 'next/link'
+
+const SearchResultsList = ({ results, onResultClick }) => (
+  <div className="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded-b-lg shadow-xl z-20 max-h-80 overflow-y-auto">
+    <ul className="divide-y divide-gray-100">
+      {results.map(product => (
+        <li key={product.id}>
+          <Link
+            href={`/product/${product.id}`} // Assuming a product page route like /products/123
+            className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100"
+            onClick={onResultClick}
+          >
+            {product.name}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 
 const Header = ({ cartCount, user, onCartClick }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const { products } = useProducts()
+
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setSearchResults([])
+      return
+    }
+
+    const debounceTimer = setTimeout(() => {
+      const results = products
+        .filter(product =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .slice(0, 10)
+      setSearchResults(results)
+    }, 100) // 100ms debounce
+
+    return () => clearTimeout(debounceTimer)
+  }, [searchTerm, products])
+
+  const handleResultClick = () => {
+    setSearchTerm('')
+    setSearchResults([])
+    setIsSearchFocused(false)
+    setIsSearchOpen(false) // Close mobile search on selection
+  }
 
   return (
     <header className="bg-blue-600 text-white shadow-lg sticky top-0 z-50">
@@ -34,7 +82,14 @@ const Header = ({ cartCount, user, onCartClick }) => {
                 type="text"
                 placeholder="Search electronics..."
                 className="w-full pl-10 pr-4 py-2 lg:py-2.5 rounded-lg text-black text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-blue-300"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
               />
+              {isSearchFocused && searchResults.length > 0 && (
+                <SearchResultsList results={searchResults} onResultClick={handleResultClick} />
+              )}
             </div>
           </div>
           
@@ -80,7 +135,14 @@ const Header = ({ cartCount, user, onCartClick }) => {
               placeholder="Search electronics..."
               className="w-full pl-10 pr-4 py-2 rounded-lg text-black text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
               autoFocus
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
             />
+            {isSearchFocused && searchResults.length > 0 && (
+              <SearchResultsList results={searchResults} onResultClick={handleResultClick} />
+            )}
           </div>
         </div>
       )}

@@ -5,6 +5,7 @@ import { AuthProvider } from '@/contexts/AuthContext'
 import { CartProvider } from '@/contexts/CartContext' 
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import { OrderProvider } from '@/contexts/OrderContext'
+import { ProductProvider } from '@/contexts/ProductContext'
 import { TOAST_OPTIONS } from '@/lib/constants/toastOptions'
 import './globals.css'
 
@@ -33,8 +34,10 @@ export default function RootLayout({ children }) {
           <AuthProvider>
             <CartProvider>
               <OrderProvider>
+                <ProductProvider>
                 <Toaster toastOptions={TOAST_OPTIONS} />
                 {children}
+                </ProductProvider>
               </OrderProvider>
             </CartProvider>
           </AuthProvider>

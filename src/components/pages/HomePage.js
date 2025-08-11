@@ -1,41 +1,28 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Sidebar from '@/components/layout/Sidebar'
 import ProductGrid from '@/components/products/ProductGrid'
 import Filter from '@/components/filters/Filter'
 import { useFilters } from '@/hooks/useFilters'
 import { filterProducts, sortProducts } from '@/lib/utils/productUtils'
-import { productApi } from '@/services/api/productApi'
+import { useProducts } from '@/contexts/ProductContext'
 
 const HomePage = ({ onAddToCart }) => {
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [products, setProducts] = useState([])
-  const [categories, setCategories] = useState([])
-  const [loading, setLoading] = useState(true)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   const { filters, updateFilter } = useFilters()
+  const { products, categories, loading, error } = useProducts()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [productResponse, categoriesResponse] = await Promise.all([
-          productApi.getProducts(),
-          productApi.getCategories(),
-        ])
-        setProducts(productResponse.products)
-        setCategories(categoriesResponse)
-      } catch (error) {
-        console.error('Failed to fetch initial data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [])
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-center p-4">
+        <p className="text-red-500 text-lg">Failed to load products. Please try again later.</p>
+      </div>
+    )
+  }
 
   const handleToggleWishlist = async (productId) => {
     console.log('Toggle wishlist for product:', productId)
