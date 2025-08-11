@@ -1,5 +1,4 @@
 import { mockProducts } from '@/lib/data/mockData'
-import { PRODUCT_CATEGORIES } from '@/lib/constants/categories'
 
 export const productApi = {
   getProducts: async (params = {}) => {
@@ -21,8 +20,33 @@ export const productApi = {
   },
 
   getCategories: async () => {
-    await new Promise(resolve => setTimeout(resolve, 200))
-    return PRODUCT_CATEGORIES
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Get unique categories and their counts from the products list
+    const categoryCounts = mockProducts.reduce((acc, product) => {
+      const { category } = product;
+      if (category) {
+        acc[category] = (acc[category] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
+    // Format into the desired array of objects structure
+    const categories = Object.entries(categoryCounts).map(([id, count]) => ({
+      id,
+      // A simple way to create a user-friendly name from an ID
+      name: id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' '),
+      count,
+    }));
+
+    // Sort categories alphabetically by name for consistent ordering
+    categories.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Prepend the 'All Products' category
+    categories.unshift({ id: 'all', name: 'All Products', count: mockProducts.length });
+
+    return categories;
   },
 
   searchProducts: async (query) => {
