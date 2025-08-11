@@ -1,9 +1,12 @@
 // src/app/layout.js
 import { Inter } from 'next/font/google'
-import './globals.css'
+import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from '@/contexts/AuthContext'
-import { CartProvider } from '@/contexts/CartContext'
+import { CartProvider } from '@/contexts/CartContext' 
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import { OrderProvider } from '@/contexts/OrderContext'
+import { TOAST_OPTIONS } from '@/lib/constants/toastOptions'
+import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,7 +32,10 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           <AuthProvider>
             <CartProvider>
-              {children}
+              <OrderProvider>
+                <Toaster toastOptions={TOAST_OPTIONS} />
+                {children}
+              </OrderProvider>
             </CartProvider>
           </AuthProvider>
         </ThemeProvider>

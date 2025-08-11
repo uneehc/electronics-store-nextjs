@@ -1,13 +1,17 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useCart } from '@/hooks/useCart'
+import { useOrders } from '@/hooks/useOrders'
 import Header from '@/components/common/Header'
 import Image from 'next/image'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 
 export default function CheckoutPage() {
-  const { cartItems, cartTotal, cartCount } = useCart()
+  const { cartItems, cartTotal, cartCount, clearCart } = useCart()
+  const { addOrder } = useOrders()
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -17,6 +21,7 @@ export default function CheckoutPage() {
     postalCode: '',
     country: 'US'
   })
+  const router = useRouter()
 
   const mockUser = { name: 'John Doe' }
 
@@ -29,8 +34,25 @@ export default function CheckoutPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Handle checkout logic here
-    console.log('Checkout form submitted:', formData)
+
+    // Consolidate all order details into a single object
+    const orderDetails = {
+      id: crypto.randomUUID(),
+      shippingInfo: { ...formData },
+      items: cartItems,
+      subtotal: cartTotal,
+      tax: cartTotal * 0.08, // Note: This logic is also in the summary view
+      total: cartTotal * 1.08, // It might be better to calculate this once
+      orderDate: new Date().toISOString()
+    }
+    
+    addOrder(orderDetails)
+    toast.success('Order placed successfully!', { duration: 500 })
+    clearCart()
+
+    setTimeout(() => {
+      router.push('/')
+    }, 500)
   }
 
   if (cartItems.length === 0) {

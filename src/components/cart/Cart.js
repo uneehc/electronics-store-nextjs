@@ -9,8 +9,6 @@ const Cart = ({ items, onUpdateQuantity, onRemoveItem, onClearCart, isVisible, o
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
 
-  console.log('clearcart', onClearCart)
-
   const handleClearCartWithConfirmation = () => {
     if (window.confirm('Are you sure you want to remove all items from your cart?')) {
       onClearCart();
