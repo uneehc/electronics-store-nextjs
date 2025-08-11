@@ -4,12 +4,12 @@ import React, { useState } from 'react'
 import { ChevronDown, SlidersHorizontal, X } from 'lucide-react'
 import { PRICE_RANGE_OPTIONS, BRAND_OPTIONS, SORT_OPTIONS } from '@/lib/constants/masterData'
 
-const Filter = ({ filters, onFilterChange, isOpen, onClose }) => {
+const Filter = ({ filters, onFilterChange, isOpen, onOpen, onClose }) => {
   const [expandedSections, setExpandedSections] = useState({
-    price: true,
+    price: false,
     brand: false,
     rating: false,
-    sort: true
+    sort: false
   })
 
   const toggleSection = (section) => {
@@ -20,7 +20,7 @@ const Filter = ({ filters, onFilterChange, isOpen, onClose }) => {
   }
 
   const FilterContent = () => (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 sm:space-y-6 w-full">
       {/* Price Range Filter */}
       <div>
         <button
@@ -127,13 +127,39 @@ const Filter = ({ filters, onFilterChange, isOpen, onClose }) => {
       {/* Mobile/Tablet Filter Button */}
       <div className="lg:hidden mb-4">
         <button
-          onClick={() => {}} // This would open mobile filter modal
+          onClick={onOpen}
           className="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
         >
           <SlidersHorizontal className="w-4 h-4" />
           <span className="text-sm font-medium">Filters & Sort</span>
         </button>
       </div>
+
+      {/* Mobile Filter Modal */}
+      {isOpen && (
+        <div className="lg:hidden fixed inset-0 z-50">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50"
+            onClick={onClose}
+            aria-hidden="true"
+          />
+
+          {/* Modal Panel */}
+          <div className="fixed inset-y-0 left-0 w-full max-w-sm bg-white p-6 overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-semibold text-lg flex items-center space-x-2">
+                <SlidersHorizontal className="w-5 h-5" />
+                <span>Filters & Sort</span>
+              </h3>
+              <button onClick={onClose} className="p-1 -mr-2 rounded-full hover:bg-gray-100 transition-colors">
+                <X className="w-6 h-6 text-gray-600" />
+              </button>
+            </div>
+            <FilterContent />
+          </div>
+        </div>
+      )}
     </>
   )
 }

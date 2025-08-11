@@ -46,17 +46,28 @@ const HomePage = ({ onAddToCart }) => {
         
         {/* Main Content */}
         <main className="flex-1 p-4 sm:p-6 lg:ml-0">
-          {/* Mobile Category Button */}
-          <div className="lg:hidden mb-4">
-            <button
-              onClick={() => setIsSidebarOpen(true)}
-              className="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              <span className="text-sm font-medium">Categories</span>
-            </button>
+          <div>
+            {/* Mobile Category Button */}
+            <div className="lg:hidden mb-4">
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <span className="text-sm font-medium">Categories</span>
+              </button>
+            </div>
+
+            {/* Filter Component */}
+            <Filter 
+              filters={filters} 
+              onFilterChange={updateFilter}
+              isOpen={isFilterOpen}
+              onOpen={() => setIsFilterOpen(true)}
+              onClose={() => setIsFilterOpen(false)}
+            />
           </div>
 
           {/* Breadcrumb */}
@@ -72,13 +83,7 @@ const HomePage = ({ onAddToCart }) => {
             </div>
           </nav>
 
-          {/* Filter Component */}
-          <Filter 
-            filters={filters} 
-            onFilterChange={updateFilter}
-            isOpen={isFilterOpen}
-            onClose={() => setIsFilterOpen(false)}
-          />
+          
           
           {/* Product Grid */}
           <ProductGrid
