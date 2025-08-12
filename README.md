@@ -162,7 +162,6 @@ vercel
 - [ ] Wishlist functionality
 - [ ] Order tracking
 - [ ] Admin dashboard
-- [ ] Search functionality
 - [ ] Product recommendations
 - [ ] Multi-language support
 - [ ] PWA features
